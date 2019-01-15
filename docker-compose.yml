@@ -6,21 +6,27 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.5.4
     # 生产环境建议设置ulimits
     ulimits:
-      nproc: 65535
-      nofile: 65536
-      memlock: -1
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+      nproc:
+        soft: 65536
+        hard: 65536
     environment:
       - node.name=es01
       # 生产环境建议开启
       - bootstrap.memory_lock=true
       - discovery.zen.minimum_master_nodes=2
-      - ELASTIC_PASSWORD=$ELASTIC_PASSWORD 
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      - xpack.license.self_generated.type=trial 
+      - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
+      - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
+      - xpack.license.self_generated.type=trial
       - xpack.security.enabled=true
       - xpack.security.http.ssl.enabled=true
       - xpack.security.transport.ssl.enabled=true
-      - xpack.security.transport.ssl.verification_mode=certificate 
+      - xpack.security.transport.ssl.verification_mode=certificate
       - xpack.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
       - xpack.ssl.certificate=$CERTS_DIR/es01/es01.crt
       - xpack.ssl.key=$CERTS_DIR/es01/es01.key
@@ -38,9 +44,15 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.5.4
     # 生产环境建议设置ulimits
     ulimits:
-      nproc: 65535
-      nofile: 65536
-      memlock: -1
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+      nproc:
+        soft: 65536
+        hard: 65536
     environment:
       - node.name=es02
       # 生产环境建议开启
@@ -49,7 +61,7 @@ services:
       # elastic用户的密码, 需要在".env"文件中修改
       - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
       - discovery.zen.ping.unicast.hosts=es01
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
       # xpack的授权模式, 提供basic和trial
       # ref: https://www.elastic.co/guide/en/elasticsearch/reference/master/license-settings.html
       - xpack.license.self_generated.type=trial
@@ -67,6 +79,6 @@ services:
   wait_until_ready:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.5.4
     command: /usr/bin/true
-    depends_on: {"es01": {"condition": "service_healthy"}}
+    depends_on: { 'es01': { 'condition': 'service_healthy' } }
 
-volumes: {"esdata_01": {"driver": "local"}, "esdata_02": {"driver": "local"}}
+volumes: { 'esdata_01': { 'driver': 'local' }, 'esdata_02': { 'driver': 'local' } }
